@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "9OdYXiHFaaZbGoUMegw0sVOvZjk53bpOKU1xM+aQBNNzf03NJZ+JCQvhKfohzx7wBWluZCBnB2q/S80/SNonKQ==",
+  "success": true,
+  "projectFilePath": "/home/juno/RiderProjects/WebApplication1/Terminal/Terminal.csproj",
+  "expectedPackageFiles": [
+    "/home/juno/.nuget/packages/microsoft.win32.systemevents/6.0.2-mauipre.1.22102.15/microsoft.win32.systemevents.6.0.2-mauipre.1.22102.15.nupkg.sha512",
+    "/home/juno/.nuget/packages/system.drawing.common/6.0.2-mauipre.1.22102.15/system.drawing.common.6.0.2-mauipre.1.22102.15.nupkg.sha512"
+  ],
+  "logs": []
+}

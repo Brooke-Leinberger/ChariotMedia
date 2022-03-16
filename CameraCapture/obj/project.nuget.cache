@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "gOpi3v8JqLUR2XvsXrpjNQxgVbj+lXPXia6LnEx8+JDUExizRzRcVRHPBO7HoKzZMVg7Eyb5Y83QHNq23z0AyA==",
+  "success": true,
+  "projectFilePath": "/home/juno/RiderProjects/WebApplication1/CameraCapture/CameraCapture.csproj",
+  "expectedPackageFiles": [
+    "/home/juno/.nuget/packages/microsoft.win32.systemevents/6.0.2-mauipre.1.22102.15/microsoft.win32.systemevents.6.0.2-mauipre.1.22102.15.nupkg.sha512",
+    "/home/juno/.nuget/packages/system.drawing.common/6.0.2-mauipre.1.22102.15/system.drawing.common.6.0.2-mauipre.1.22102.15.nupkg.sha512"
+  ],
+  "logs": []
+}
