@@ -23,8 +23,18 @@ namespace CameraCapture
 
             
         }
+        
+        private static int Clamp(int value, int upperBound, int lowerBound)
+        {
+            if (value < lowerBound)
+                return lowerBound;
+            else if (value > upperBound)
+                return upperBound;
+            
+            return value;
+        }
 
-        static void Main(string[] args)
+        static unsafe void Main(string[] args)
         {
             CompareType<v4l2_capability>();
             CompareType<v4l2_fmtdesc>();
@@ -50,17 +60,53 @@ namespace CameraCapture
             // Send photos
 
             //device.Capture("/home/juno/test.jpg");
-
+            
+            Console.WriteLine("Starting Server...");
             int port = 7777;
-            IPEndPoint ipep = new IPEndPoint(IPAddress.Loopback, port);
+            IPEndPoint ipep = new IPEndPoint(IPAddress.Any, port);
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(ipep);
             listener.Blocking = true;
 
             listener.Listen();
+            Console.WriteLine("Server Started; Awaiting Clients...");
             Socket client = listener.Accept();
+            string path = "/home/juno/captures";
+            Console.WriteLine($"Client Connected; Local Images Saved at {path}\nStarting Stream...");
+
             
-            device.SendSerializedFrame(client, "/home/juno/local_test.png");
+            fixed (V4l2FrameBuffer* buffers = &(((UnixVideoDevice)device).ApplyFrameBuffers()[0]))
+            {
+                // Start data stream
+                v4l2_buf_type type = v4l2_buf_type.V4L2_BUF_TYPE_VIDEO_CAPTURE;
+                var status = Interop.ioctl(((UnixVideoDevice) device).getFD(), (int) RawVideoSettings.VIDIOC_STREAMON,
+                    new IntPtr(&type));
+                
+                for(int id = 0;;id++)
+                {
+                    byte[] dataBuffer = ((UnixVideoDevice) device).GetFrameData(buffers);
+                    
+                    int buffer = 0;
+                    for (int count = 0; count < dataBuffer.Length;)
+                    {
+                        buffer = Clamp(dataBuffer.Length - count, 1024, 0);
+                        client.Send(dataBuffer, count, buffer, SocketFlags.None);
+                        count += buffer;
+                    }
+                    
+                    device.SaveFrame($"{path}/local{id}", dataBuffer);
+                    Thread.Sleep(100);
+                }
+                
+                
+
+                // Close data stream
+                status = Interop.ioctl(((UnixVideoDevice) device).getFD(), (int) RawVideoSettings.VIDIOC_STREAMOFF,
+                    new IntPtr(&type));
+
+                UnixVideoDevice.UnmappingFrameBuffers(buffers);
+            }
+            //device.SendSerializedFrame(client, "/home/pi/local_test.jng");
         }
     }
 }

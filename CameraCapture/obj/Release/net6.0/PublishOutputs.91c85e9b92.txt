@@ -1,0 +1,10 @@
+/home/juno/RiderProjects/WebApplication1/CameraCapture/bin/Release/net6.0/publish/CameraCapture
+/home/juno/RiderProjects/WebApplication1/CameraCapture/bin/Release/net6.0/publish/CameraCapture.dll
+/home/juno/RiderProjects/WebApplication1/CameraCapture/bin/Release/net6.0/publish/CameraCapture.deps.json
+/home/juno/RiderProjects/WebApplication1/CameraCapture/bin/Release/net6.0/publish/CameraCapture.runtimeconfig.json
+/home/juno/RiderProjects/WebApplication1/CameraCapture/bin/Release/net6.0/publish/CameraCapture.pdb
+/home/juno/RiderProjects/WebApplication1/CameraCapture/bin/Release/net6.0/publish/Microsoft.Win32.SystemEvents.dll
+/home/juno/RiderProjects/WebApplication1/CameraCapture/bin/Release/net6.0/publish/System.Drawing.Common.dll
+/home/juno/RiderProjects/WebApplication1/CameraCapture/bin/Release/net6.0/publish/runtimes/win/lib/net6.0/Microsoft.Win32.SystemEvents.dll
+/home/juno/RiderProjects/WebApplication1/CameraCapture/bin/Release/net6.0/publish/runtimes/unix/lib/net6.0/System.Drawing.Common.dll
+/home/juno/RiderProjects/WebApplication1/CameraCapture/bin/Release/net6.0/publish/runtimes/win/lib/net6.0/System.Drawing.Common.dll

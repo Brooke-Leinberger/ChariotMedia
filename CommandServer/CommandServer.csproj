@@ -11,6 +11,7 @@
         <PackageReference Include="CSWebCam" Version="1.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.3" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0" />
+        <PackageReference Include="SSH.NET" Version="2020.0.1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
         <PackageReference Include="System.Drawing.Common" Version="6.0.2-mauipre.1.22102.15" />
     </ItemGroup>

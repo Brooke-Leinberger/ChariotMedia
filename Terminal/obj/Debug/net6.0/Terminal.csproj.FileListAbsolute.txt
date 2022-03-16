@@ -19,3 +19,5 @@
 /home/juno/RiderProjects/WebApplication1/Terminal/obj/Debug/net6.0/Terminal.pdb
 /home/juno/RiderProjects/WebApplication1/Terminal/obj/Debug/net6.0/Terminal.genruntimeconfig.cache
 /home/juno/RiderProjects/WebApplication1/Terminal/obj/Debug/net6.0/ref/Terminal.dll
+/home/juno/RiderProjects/WebApplication1/Terminal/bin/Debug/net6.0/Renci.SshNet.dll
+/home/juno/RiderProjects/WebApplication1/Terminal/bin/Debug/net6.0/SshNet.Security.Cryptography.dll

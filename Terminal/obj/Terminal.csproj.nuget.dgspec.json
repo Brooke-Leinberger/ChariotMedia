@@ -38,6 +38,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "SSH.NET": {
+              "target": "Package",
+              "version": "[2020.0.1, )"
+            },
             "System.Drawing.Common": {
               "target": "Package",
               "version": "[6.0.2-mauipre.1.22102.15, )"

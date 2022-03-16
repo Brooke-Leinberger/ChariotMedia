@@ -21,6 +21,11 @@ namespace Iot.Device.Media
         private int _deviceFileDescriptor = -1;
         private static readonly object s_initializationLock = new object();
 
+        public int getFD()
+        {
+            return _deviceFileDescriptor;
+        }
+
         /// <summary>
         /// Path to video resources located on the platform.
         /// </summary>
@@ -203,7 +208,7 @@ namespace Iot.Device.Media
             return result;
         }
 
-        private unsafe byte[] ProcessCaptureData()
+        public unsafe byte[] ProcessCaptureData()
         {
             fixed (V4l2FrameBuffer* buffers = &ApplyFrameBuffers()[0])
             {
@@ -223,7 +228,7 @@ namespace Iot.Device.Media
         }
         
 
-        private unsafe byte[] GetFrameData(V4l2FrameBuffer* buffers)
+        public unsafe byte[] GetFrameData(V4l2FrameBuffer* buffers)
         {
             // Get one frame from the buffer
             v4l2_buffer frame = new v4l2_buffer
@@ -244,7 +249,7 @@ namespace Iot.Device.Media
             return dataBuffer;
         }
 
-        private unsafe V4l2FrameBuffer[] ApplyFrameBuffers()
+        public unsafe V4l2FrameBuffer[] ApplyFrameBuffers()
         {
             // Apply for buffers, use memory mapping
             v4l2_requestbuffers req = new v4l2_requestbuffers
@@ -286,7 +291,7 @@ namespace Iot.Device.Media
             return buffers;
         }
 
-        private static unsafe void UnmappingFrameBuffers(V4l2FrameBuffer* buffers)
+        public static unsafe void UnmappingFrameBuffers(V4l2FrameBuffer* buffers)
         {
             // Unmapping the applied buffer to user space
             for (uint i = 0; i < BufferCount; i++)
