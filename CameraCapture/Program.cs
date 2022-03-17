@@ -61,8 +61,11 @@ namespace CameraCapture
 
             //device.Capture("/home/juno/test.jpg");
             
-            Console.WriteLine("Starting Server...");
             int port = 7777;
+            int file_size = 128000; //***CHANGES BASED ON RESOLUTION AND CAMERA***
+            
+            Console.WriteLine("Starting Server...");
+
             IPEndPoint ipep = new IPEndPoint(IPAddress.Any, port);
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(ipep);
@@ -71,7 +74,7 @@ namespace CameraCapture
             listener.Listen();
             Console.WriteLine("Server Started; Awaiting Clients...");
             Socket client = listener.Accept();
-            string path = "/home/pi/captures";
+            string path = "/home/juno/captures";
             Console.WriteLine($"Client Connected; Local Images Saved at {path}\nStarting Stream...");
 
             
@@ -82,20 +85,19 @@ namespace CameraCapture
                 var status = Interop.ioctl(((UnixVideoDevice) device).getFD(), (int) RawVideoSettings.VIDIOC_STREAMON,
                     new IntPtr(&type));
                 
-                for(int id = 0; id < 60; id++)
+                for(int id = 0; id < 5; id++)
                 {
                     byte[] dataBuffer = ((UnixVideoDevice) device).GetFrameData(buffers);
-                    Console.WriteLine(dataBuffer.Length);
-                    
-                    int buffer = 0;
-                    for (int count = 0; count < dataBuffer.Length;)
+                    JpegParser parser = new JpegParser(dataBuffer);
+
+                    int length = parser.find_length();
+                    byte[] saveBuffer = new byte[length];
+                    for (int count = 0; count < length;)
                     {
-                        buffer = Clamp(dataBuffer.Length - count, 1024, 0);
-                        client.Send(dataBuffer, count, buffer, SocketFlags.None);
-                        count += buffer;
+                        count += client.Send(dataBuffer, count, 1024, SocketFlags.None);
                     }
                     
-                    device.SaveFrame($"{path}/local{id}.jpg", dataBuffer);
+                    device.SaveFrame($"{path}/local{id}.jpg", saveBuffer);
                 }
                 
                 
@@ -105,11 +107,17 @@ namespace CameraCapture
                     new IntPtr(&type));
 
                 UnixVideoDevice.UnmappingFrameBuffers(buffers);
-            }*/
+                
+            }
             //device.SendSerializedFrame(client, "/home/pi/local_test.jng");
+            */
 
-            JpegParser parser = new JpegParser(File.ReadAllBytes("/home/juno/cap0.jpg"));
-            Console.WriteLine(parser.find_length());
+            byte[] dataBuffer = File.ReadAllBytes("/home/juno/cap0.jpg");
+            JpegParser parser = new JpegParser(dataBuffer);
+            int length = parser.find_length();
+            byte[] saveBuffer = new byte[length];
+            
+            
         }
     }
 }

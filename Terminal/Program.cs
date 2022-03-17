@@ -20,27 +20,26 @@ class Program
     {
 
         Socket Server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        Server.Connect(IPAddress.Parse("192.168.58.169"), 7777);
-//Server.Connect(IPAddress.Parse("127.0.0.1"), 7777);
+        //Server.Connect(IPAddress.Parse("192.168.58.169"), 7777);
+        Server.Connect(IPAddress.Parse("127.0.0.1"), 7777);
 
         string path = "/home/juno/transfer_test.jpg";
 
         byte[] dataBuffer = new byte[1024];
 
-        int fileSize = 1843200;
+        int file_size = 128000; //MAKE SURE THIS NUMBER MATCHES THE CLIENT
 
         for (int num = 0; num < 60; num++)
         {
             using FileStream fs = new FileStream($"/home/juno/transfers/test{num}.jpg", FileMode.Create);
             Console.WriteLine("New File");
-            for (int count = 0; count < fileSize;)
+            int count1 = 0;
+            for (int count = 0; count < 125; count++)
             {
-                int gros = Server.Receive(dataBuffer, 0, Clamp(fileSize - count, 1024, 0), SocketFlags.None);
-                //Console.WriteLine(gros);
+                int gros = Server.Receive(dataBuffer, 0, 1024, SocketFlags.None);
                 fs.Write(dataBuffer, 0, gros);
                 fs.Flush();
-                count += gros;
-                Console.WriteLine(count);
+                count1 += gros;
             }
 
             fs.Dispose();

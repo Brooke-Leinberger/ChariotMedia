@@ -35,8 +35,8 @@ public class JpegParser
             marker[3] = 0;
         }
     }
-    
-    public int find_length()
+
+    private int header_length()
     {
         //parse through header, until Start of Scan
         int index = 0;
@@ -47,18 +47,32 @@ public class JpegParser
         
 
 
-        for (; Convert.ToHexString(marker).Substring(0, 4) != "FFDA" ; parse_marker(index))
+        for (;;parse_marker(index))
         {
+            string hex_debug = Convert.ToString(index, 16);
             parse_marker(index);
-            if (Convert.ToHexString(marker).Substring(0, 2) != "FF")
+            if (marker[0] != 255)
                 return -2; //should be a marker
+            if (marker[1] == 218)
+                return index;
             index += 16 * marker[2] + marker[3] + 2; //offset by length signifier + 2
         }
-        
-        Console.WriteLine($"SOS: {Convert.ToString(index, 16)}");
-        //brute force until end of file
+    }
 
-        return -100;
+    private int scan_length(int header_length)
+    {
+        for (int i = header_length; i < image.Length; i++)
+        {
+            if (image[i] == 255 && image[i + 1] == 217)
+                return i + 2;
+        }
+
+        return -1;
+    }
+    
+    public int find_length()
+    {
+        return scan_length(header_length());
     }
 
 }
