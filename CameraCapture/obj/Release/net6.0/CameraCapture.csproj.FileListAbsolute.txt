@@ -19,3 +19,5 @@
 /home/juno/RiderProjects/WebApplication1/CameraCapture/obj/Release/net6.0/CameraCapture.pdb
 /home/juno/RiderProjects/WebApplication1/CameraCapture/obj/Release/net6.0/CameraCapture.genruntimeconfig.cache
 /home/juno/RiderProjects/WebApplication1/CameraCapture/obj/Release/net6.0/ref/CameraCapture.dll
+/home/juno/RiderProjects/WebApplication1/CameraCapture/bin/Release/net6.0/Renci.SshNet.dll
+/home/juno/RiderProjects/WebApplication1/CameraCapture/bin/Release/net6.0/SshNet.Security.Cryptography.dll
