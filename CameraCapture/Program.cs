@@ -82,10 +82,9 @@ namespace CameraCapture
                 var status = Interop.ioctl(((UnixVideoDevice) device).getFD(), (int) RawVideoSettings.VIDIOC_STREAMON,
                     new IntPtr(&type));
                 
-                for(int id = 0; id < 5; id++)
+                for(int id = 0; id < 60; id++)
                 {
-                    //byte[] dataBuffer = ((UnixVideoDevice) device).GetFrameData(buffers);
-                    byte[] dataBuffer = File.ReadAllBytes("/home/juno/cap0.jpg");
+                    byte[] dataBuffer = ((UnixVideoDevice) device).GetFrameData(buffers);
                     Console.WriteLine(dataBuffer.Length);
                     
                     int buffer = 0;

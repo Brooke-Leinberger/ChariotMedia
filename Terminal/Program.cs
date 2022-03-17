@@ -29,7 +29,7 @@ class Program
 
         int fileSize = 1843200;
 
-        for (int num = 0; num < 5; num++)
+        for (int num = 0; num < 60; num++)
         {
             using FileStream fs = new FileStream($"/home/juno/transfers/test{num}.jpg", FileMode.Create);
             Console.WriteLine("New File");
