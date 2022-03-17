@@ -35,7 +35,7 @@ namespace CameraCapture
         }
 
         static unsafe void Main(string[] args)
-        {
+        {/*
             CompareType<v4l2_capability>();
             CompareType<v4l2_fmtdesc>();
             CompareType<v4l2_requestbuffers>();
@@ -105,8 +105,11 @@ namespace CameraCapture
                     new IntPtr(&type));
 
                 UnixVideoDevice.UnmappingFrameBuffers(buffers);
-            }
+            }*/
             //device.SendSerializedFrame(client, "/home/pi/local_test.jng");
+
+            JpegParser parser = new JpegParser(File.ReadAllBytes("/home/juno/cap0.jpg"));
+            Console.WriteLine(parser.find_length());
         }
     }
 }
