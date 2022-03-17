@@ -35,7 +35,7 @@ namespace CameraCapture
         }
 
         static unsafe void Main(string[] args)
-        {/*
+        {
             CompareType<v4l2_capability>();
             CompareType<v4l2_fmtdesc>();
             CompareType<v4l2_requestbuffers>();
@@ -88,6 +88,7 @@ namespace CameraCapture
                 for(int id = 0; id < 5; id++)
                 {
                     byte[] dataBuffer = ((UnixVideoDevice) device).GetFrameData(buffers);
+                    device.SaveFrame($"{path}/data.jpg", dataBuffer);
                     JpegParser parser = new JpegParser(dataBuffer);
 
                     int length = parser.find_length();
@@ -96,26 +97,28 @@ namespace CameraCapture
                     {
                         count += client.Send(dataBuffer, count, 1024, SocketFlags.None);
                     }
+
+                    for (int i = 0; i < saveBuffer.Length; i++)
+                        saveBuffer[i] = dataBuffer[i];
                     
-                    device.SaveFrame($"{path}/local{id}.jpg", saveBuffer);
+                    device.SaveFrame($"{path}/save{id}.jpg", saveBuffer);
+                    int[] res = parser.get_resolution();
+                    Console.WriteLine($"Resolution: {res[0]}x{res[1]}");
                 }
                 
                 
 
                 // Close data stream
+                Console.WriteLine("Closing Server...");
                 status = Interop.ioctl(((UnixVideoDevice) device).getFD(), (int) RawVideoSettings.VIDIOC_STREAMOFF,
                     new IntPtr(&type));
 
                 UnixVideoDevice.UnmappingFrameBuffers(buffers);
-                
+                client.Close();
+                listener.Close();
+                Console.WriteLine("Server Closed");
             }
             //device.SendSerializedFrame(client, "/home/pi/local_test.jng");
-            */
-
-            byte[] dataBuffer = File.ReadAllBytes("/home/juno/cap0.jpg");
-            JpegParser parser = new JpegParser(dataBuffer);
-            int length = parser.find_length();
-            byte[] saveBuffer = new byte[length];
             
             
         }

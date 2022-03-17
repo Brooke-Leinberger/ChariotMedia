@@ -30,10 +30,15 @@ public class JpegParser
         string hex = Convert.ToHexString(marker);
         if (Regex.IsMatch(hex, "(FF)(00|01|D[0-9]).{4}"))
         {
-            //These markers don't have length
+            //These markers don't have length; skip past 
             marker[2] = 0;
             marker[3] = 0;
         }
+    }
+
+    public int[] get_resolution()
+    {
+        return new int[] {256 * image[9] + image[10], 256 * image[7] + image[8]};
     }
 
     private int header_length()
@@ -41,13 +46,13 @@ public class JpegParser
         //parse through header, until Start of Scan
         int index = 0;
         parse_marker(index);
-        index += 2;
         if (Convert.ToHexString(marker) != "FFD80000")
             return -1; //Not a valid jpeg
-        
+
+        index += 2;
 
 
-        for (;;parse_marker(index))
+        while (true)
         {
             string hex_debug = Convert.ToString(index, 16);
             parse_marker(index);
@@ -55,7 +60,7 @@ public class JpegParser
                 return -2; //should be a marker
             if (marker[1] == 218)
                 return index;
-            index += 16 * marker[2] + marker[3] + 2; //offset by length signifier + 2
+            index += 256 * marker[2] + marker[3] + 2; //offset by length signifier + 2
         }
     }
 
