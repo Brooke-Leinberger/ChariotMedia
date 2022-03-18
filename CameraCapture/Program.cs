@@ -34,6 +34,17 @@ namespace CameraCapture
             return value;
         }
 
+        private static byte[] IntToBytes(int value, int size)
+        {
+            byte[] bytes = new byte[size];
+            for (int i = 0; i < size; i++)
+            {
+                bytes[i] = (byte)(value % 256);
+                value >>= 8;
+            }
+            return bytes;
+        }
+
         static unsafe void Main(string[] args)
         {
             CompareType<v4l2_capability>();
@@ -93,9 +104,10 @@ namespace CameraCapture
 
                     int length = parser.find_length();
                     byte[] saveBuffer = new byte[length];
+                    client.Send(IntToBytes(length, 3), 3, SocketFlags.None);
                     for (int count = 0; count < length;)
                     {
-                        count += client.Send(dataBuffer, count, 1024, SocketFlags.None);
+                        count += client.Send(dataBuffer, count, Clamp(length-count, 1024, 0), SocketFlags.None);
                     }
 
                     for (int i = 0; i < saveBuffer.Length; i++)

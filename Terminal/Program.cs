@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Collections;
 using System.Net;
 using System.Net.Sockets;
 
@@ -15,7 +16,7 @@ class Program
 
         return value;
     }
-    
+
     static void Main()
     {
 
@@ -23,25 +24,27 @@ class Program
         //Server.Connect(IPAddress.Parse("192.168.58.169"), 7777);
         Server.Connect(IPAddress.Parse("127.0.0.1"), 7777);
 
+        int maxSize = 1843200;
         string path = "/home/juno/transfer_test.jpg";
+        byte[] handshake = new byte[3];
 
-        byte[] dataBuffer = new byte[1024];
-
-        int file_size = 128000; //MAKE SURE THIS NUMBER MATCHES THE CLIENT
-
-        for (int num = 0; num < 60; num++)
+        for (int num = 0; num < 5; num++)
         {
-            using FileStream fs = new FileStream($"/home/juno/transfers/test{num}.jpg", FileMode.Create);
+
+            Server.Receive(handshake, 0, 3, SocketFlags.None);
+            byte[] dataBuffer = new byte[256 * 256 * handshake[2] + 256 * handshake[1] + handshake[0]];
             Console.WriteLine("New File");
-            int count1 = 0;
-            for (int count = 0; count < 125; count++)
+            
+            int gros = 0;
+            for (int count = 0; count < dataBuffer.Length; count += gros)
             {
-                int gros = Server.Receive(dataBuffer, 0, 1024, SocketFlags.None);
-                fs.Write(dataBuffer, 0, gros);
-                fs.Flush();
-                count1 += gros;
+                gros = Server.Receive(dataBuffer, count, dataBuffer.Length - count, SocketFlags.None);
+                Console.WriteLine(count);
             }
 
+            using FileStream fs = new FileStream($"/home/juno/transfers/test{num}.jpg", FileMode.Create);
+            fs.Write(dataBuffer, 0, dataBuffer.Length);
+            fs.Flush();
             fs.Dispose();
         }
     }
