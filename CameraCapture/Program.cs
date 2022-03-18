@@ -34,6 +34,17 @@ namespace CameraCapture
             return value;
         }
 
+        private static byte[] IntToBytes(int value, int size)
+        {
+            byte[] bytes = new byte[size];
+            for (int i = 0; i < size; i++)
+            {
+                bytes[i] = (byte)(value % 256);
+                value >>= 8;
+            }
+            return bytes;
+        }
+
         static unsafe void Main(string[] args)
         {
             CompareType<v4l2_capability>();
@@ -61,8 +72,11 @@ namespace CameraCapture
 
             //device.Capture("/home/juno/test.jpg");
             
-            Console.WriteLine("Starting Server...");
             int port = 7777;
+            int file_size = 128000; //***CHANGES BASED ON RESOLUTION AND CAMERA***
+            
+            Console.WriteLine("Starting Server...");
+
             IPEndPoint ipep = new IPEndPoint(IPAddress.Any, port);
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(ipep);
@@ -85,28 +99,40 @@ namespace CameraCapture
                 for(int id = 0; id < 60; id++)
                 {
                     byte[] dataBuffer = ((UnixVideoDevice) device).GetFrameData(buffers);
-                    Console.WriteLine(dataBuffer.Length);
-                    
-                    int buffer = 0;
-                    for (int count = 0; count < dataBuffer.Length;)
+                    device.SaveFrame($"{path}/data.jpg", dataBuffer);
+                    JpegParser parser = new JpegParser(dataBuffer);
+
+                    int length = parser.find_length();
+                    byte[] saveBuffer = new byte[length];
+                    client.Send(IntToBytes(length, 3), 3, SocketFlags.None);
+                    for (int count = 0; count < length;)
                     {
-                        buffer = Clamp(dataBuffer.Length - count, 1024, 0);
-                        client.Send(dataBuffer, count, buffer, SocketFlags.None);
-                        count += buffer;
+                        count += client.Send(dataBuffer, count, Clamp(length-count, 1024, 0), SocketFlags.None);
                     }
+
+                    for (int i = 0; i < saveBuffer.Length; i++)
+                        saveBuffer[i] = dataBuffer[i];
                     
-                    device.SaveFrame($"{path}/local{id}.jpg", dataBuffer);
+                    device.SaveFrame($"{path}/save{id}.jpg", saveBuffer);
+                    int[] res = parser.get_resolution();
+                    Console.WriteLine($"Resolution: {res[0]}x{res[1]}");
                 }
                 
                 
 
                 // Close data stream
+                Console.WriteLine("Closing Server...");
                 status = Interop.ioctl(((UnixVideoDevice) device).getFD(), (int) RawVideoSettings.VIDIOC_STREAMOFF,
                     new IntPtr(&type));
 
                 UnixVideoDevice.UnmappingFrameBuffers(buffers);
+                client.Close();
+                listener.Close();
+                Console.WriteLine("Server Closed");
             }
             //device.SendSerializedFrame(client, "/home/pi/local_test.jng");
+            
+            
         }
     }
 }
