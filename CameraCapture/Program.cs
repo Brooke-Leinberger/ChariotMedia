@@ -85,7 +85,7 @@ namespace CameraCapture
             listener.Listen();
             Console.WriteLine("Server Started; Awaiting Clients...");
             Socket client = listener.Accept();
-            string path = "/home/juno/captures";
+            string path = "/home/pi/captures";
             Console.WriteLine($"Client Connected; Local Images Saved at {path}\nStarting Stream...");
 
             
@@ -96,7 +96,7 @@ namespace CameraCapture
                 var status = Interop.ioctl(((UnixVideoDevice) device).getFD(), (int) RawVideoSettings.VIDIOC_STREAMON,
                     new IntPtr(&type));
                 
-                for(int id = 0; id < 5; id++)
+                for(int id = 0; id < 60; id++)
                 {
                     byte[] dataBuffer = ((UnixVideoDevice) device).GetFrameData(buffers);
                     device.SaveFrame($"{path}/data.jpg", dataBuffer);

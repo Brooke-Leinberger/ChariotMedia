@@ -21,14 +21,14 @@ class Program
     {
 
         Socket Server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        //Server.Connect(IPAddress.Parse("192.168.58.169"), 7777);
-        Server.Connect(IPAddress.Parse("127.0.0.1"), 7777);
+        Server.Connect(IPAddress.Parse("192.168.58.169"), 7777);
+        //Server.Connect(IPAddress.Parse("127.0.0.1"), 7777);
 
         int maxSize = 1843200;
         string path = "/home/juno/transfer_test.jpg";
         byte[] handshake = new byte[3];
 
-        for (int num = 0; num < 5; num++)
+        for (int num = 0; num < 60; num++)
         {
 
             Server.Receive(handshake, 0, 3, SocketFlags.None);
