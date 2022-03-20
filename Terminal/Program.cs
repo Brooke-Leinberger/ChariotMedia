@@ -3,6 +3,8 @@
 using System.Collections;
 using System.Net;
 using System.Net.Sockets;
+using SFML.Window;
+using SFML.Graphics;
 
 
 class Program
@@ -20,32 +22,31 @@ class Program
     static void Main()
     {
 
-        Socket Server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        Server.Connect(IPAddress.Parse("192.168.58.169"), 7777);
+        Socket connection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        connection.Connect(IPAddress.Parse("192.168.1.10"), 7777);
         //Server.Connect(IPAddress.Parse("127.0.0.1"), 7777);
+        RenderWindow window = new RenderWindow(new VideoMode(1920, 1080), "Pi Stream");
 
-        int maxSize = 1843200;
-        string path = "/home/juno/transfer_test.jpg";
         byte[] handshake = new byte[3];
-
-        for (int num = 0; num < 60; num++)
+        while(true)
         {
 
-            Server.Receive(handshake, 0, 3, SocketFlags.None);
+            connection.Receive(handshake, 0, 3, SocketFlags.None);
             byte[] dataBuffer = new byte[256 * 256 * handshake[2] + 256 * handshake[1] + handshake[0]];
             Console.WriteLine("New File");
             
             int gros = 0;
             for (int count = 0; count < dataBuffer.Length; count += gros)
             {
-                gros = Server.Receive(dataBuffer, count, dataBuffer.Length - count, SocketFlags.None);
+                gros = connection.Receive(dataBuffer, count, dataBuffer.Length - count, SocketFlags.None);
                 Console.WriteLine(count);
             }
 
-            using FileStream fs = new FileStream($"/home/juno/transfers/test{num}.jpg", FileMode.Create);
-            fs.Write(dataBuffer, 0, dataBuffer.Length);
-            fs.Flush();
-            fs.Dispose();
+            Drawable sprite = new Sprite(new Texture(new Image(dataBuffer)));
+            
+            window.Clear();
+            window.Draw(sprite);
+            window.Display();
         }
     }
 }

@@ -38,6 +38,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "SFML.Net": {
+              "target": "Package",
+              "version": "[2.5.0, )"
+            },
             "SSH.NET": {
               "target": "Package",
               "version": "[2020.0.1, )"

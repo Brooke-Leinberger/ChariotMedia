@@ -24,6 +24,7 @@ namespace CameraCapture
             
         }
         
+        //helper function for limiting bytes sent per packet
         private static int Clamp(int value, int upperBound, int lowerBound)
         {
             if (value < lowerBound)
@@ -34,6 +35,7 @@ namespace CameraCapture
             return value;
         }
 
+        //helper function for creating a length indicator before each frame is sent
         private static byte[] IntToBytes(int value, int size)
         {
             byte[] bytes = new byte[size];
@@ -60,23 +62,18 @@ namespace CameraCapture
             CompareType<v4l2_frmsizeenum>();
             CompareType<v4l2_buffer>();
             
+            //Settings for capture
             VideoConnectionSettings settings = new VideoConnectionSettings(0)
             {
                 CaptureSize = (1920, 1080),
                 PixelFormat = PixelFormat.MJPEG,
                 ExposureType = ExposureType.Auto
             };
+            //Initialize capture device
             using VideoDevice device = VideoDevice.Create(settings);
-
-            // Send photos
-
-            //device.Capture("/home/juno/test.jpg");
-            
             int port = 7777;
-            int file_size = 128000; //***CHANGES BASED ON RESOLUTION AND CAMERA***
             
             Console.WriteLine("Starting Server...");
-
             IPEndPoint ipep = new IPEndPoint(IPAddress.Any, port);
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(ipep);
@@ -85,8 +82,7 @@ namespace CameraCapture
             listener.Listen();
             Console.WriteLine("Server Started; Awaiting Clients...");
             Socket client = listener.Accept();
-            string path = "/home/pi/captures";
-            Console.WriteLine($"Client Connected; Local Images Saved at {path}\nStarting Stream...");
+            Console.WriteLine($"Client Connected\nStarting Stream...");
 
             
             fixed (V4l2FrameBuffer* buffers = &(((UnixVideoDevice)device).ApplyFrameBuffers()[0]))
@@ -96,29 +92,18 @@ namespace CameraCapture
                 var status = Interop.ioctl(((UnixVideoDevice) device).getFD(), (int) RawVideoSettings.VIDIOC_STREAMON,
                     new IntPtr(&type));
                 
-                for(int id = 0; id < 60; id++)
+                //Send loop
+                while(true)
                 {
-                    byte[] dataBuffer = ((UnixVideoDevice) device).GetFrameData(buffers);
-                    device.SaveFrame($"{path}/data.jpg", dataBuffer);
-                    JpegParser parser = new JpegParser(dataBuffer);
-
-                    int length = parser.find_length();
-                    byte[] saveBuffer = new byte[length];
-                    client.Send(IntToBytes(length, 3), 3, SocketFlags.None);
-                    for (int count = 0; count < length;)
-                    {
-                        count += client.Send(dataBuffer, count, Clamp(length-count, 1024, 0), SocketFlags.None);
-                    }
-
-                    for (int i = 0; i < saveBuffer.Length; i++)
-                        saveBuffer[i] = dataBuffer[i];
+                    byte[] dataBuffer = ((UnixVideoDevice) device).GetFrameData(buffers); //create byte buffer with full frame stored
                     
-                    device.SaveFrame($"{path}/save{id}.jpg", saveBuffer);
-                    int[] res = parser.get_resolution();
-                    Console.WriteLine($"Resolution: {res[0]}x{res[1]}");
+                    int length = new JpegParser(dataBuffer).find_length(); //find length of databuffer
+                    client.Send(IntToBytes(length, 3), 3, SocketFlags.None); //send length ahead of frame
+                    
+                    //send frame
+                    for (int count = 0; count < length;)
+                        count += client.Send(dataBuffer, count, Clamp(length-count, 1024, 0), SocketFlags.None);
                 }
-                
-                
 
                 // Close data stream
                 Console.WriteLine("Closing Server...");
@@ -130,9 +115,6 @@ namespace CameraCapture
                 listener.Close();
                 Console.WriteLine("Server Closed");
             }
-            //device.SendSerializedFrame(client, "/home/pi/local_test.jng");
-            
-            
         }
     }
 }
