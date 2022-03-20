@@ -1,10 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "L8S1lTol5xYFTqGCMZ8bSOCuC4MkwTcX+1XtyzL/IArohGH0KrqLDMHXR7Z16qp1e9fajhWq9xxsyPaJzfPnFw==",
+  "dgSpecHash": "+oKF7aTqgKhfj1Z6nk+kV33z+NHfjmS2QprssdgxGcR5ji+jneFHDXxl7+blsE+dBJYMHxhR2O6j0ajE9QvhOQ==",
   "success": true,
   "projectFilePath": "/home/juno/RiderProjects/WebApplication1/Terminal/Terminal.csproj",
   "expectedPackageFiles": [
+    "/home/juno/.nuget/packages/csfml/2.5.0/csfml.2.5.0.nupkg.sha512",
     "/home/juno/.nuget/packages/microsoft.win32.systemevents/6.0.2-mauipre.1.22102.15/microsoft.win32.systemevents.6.0.2-mauipre.1.22102.15.nupkg.sha512",
+    "/home/juno/.nuget/packages/sfml.audio/2.5.0/sfml.audio.2.5.0.nupkg.sha512",
+    "/home/juno/.nuget/packages/sfml.graphics/2.5.0/sfml.graphics.2.5.0.nupkg.sha512",
+    "/home/juno/.nuget/packages/sfml.net/2.5.0/sfml.net.2.5.0.nupkg.sha512",
+    "/home/juno/.nuget/packages/sfml.system/2.5.0/sfml.system.2.5.0.nupkg.sha512",
+    "/home/juno/.nuget/packages/sfml.window/2.5.0/sfml.window.2.5.0.nupkg.sha512",
     "/home/juno/.nuget/packages/ssh.net/2020.0.1/ssh.net.2020.0.1.nupkg.sha512",
     "/home/juno/.nuget/packages/sshnet.security.cryptography/1.3.0/sshnet.security.cryptography.1.3.0.nupkg.sha512",
     "/home/juno/.nuget/packages/system.drawing.common/6.0.2-mauipre.1.22102.15/system.drawing.common.6.0.2-mauipre.1.22102.15.nupkg.sha512"
