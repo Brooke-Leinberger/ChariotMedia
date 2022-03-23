@@ -98,13 +98,19 @@ namespace CameraCapture
                 {
                     byte[] dataBuffer = ((UnixVideoDevice) leftEye).GetFrameData(buffers); //create byte buffer with full frame stored
                     
-                    int length = new JpegParser(dataBuffer).find_length(); //find length of databuffer
-                    client.Send(IntToBytes(length, 3), 3, SocketFlags.None); //send length ahead of frame
-                    client.Send(IntToBytes(length, 3), 3, SocketFlags.None); //send length ahead of frame
+                    int leftLength = new JpegParser(dataBuffer).find_length(); //find length of databuffer
+                    int rightLength = new JpegParser(dataBuffer).find_length(); //find length of databuffer
+                    client.Send(IntToBytes(leftLength, 3), 3, SocketFlags.None); //send length ahead of frame
+                    client.Send(IntToBytes(rightLength, 3), 3, SocketFlags.None); //send length ahead of frame
                     
                     //send frame
-                    for (int count = 0; count < length;)
-                        count += client.Send(dataBuffer, count, Clamp(length-count, 1024, 0), SocketFlags.None);
+                    for (int count = 0; count < leftLength;)
+                        count += client.Send(dataBuffer, count, Clamp(leftLength-count, 1024, 0), SocketFlags.None);
+                    
+                    
+                    //send frame
+                    for (int count = 0; count < rightLength;)
+                        count += client.Send(dataBuffer, count, Clamp(rightLength-count, 1024, 0), SocketFlags.None);
                 }
 
                 // Close data stream

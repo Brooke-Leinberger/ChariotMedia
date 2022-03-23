@@ -41,13 +41,14 @@ class Program
             
             //Recieve loop
             for (int count = 0, gros = 0; count < leftBuffer.Length; count += gros)
-            {
                 gros = connection.Receive(leftBuffer, count, leftBuffer.Length - count, SocketFlags.None);
-                Console.WriteLine(count);
-            }
+            
+            //Recieve loop
+            for (int count = 0, gros = 0; count < rightBuffer.Length; count += gros)
+                gros = connection.Receive(rightBuffer, count, rightBuffer.Length - count, SocketFlags.None);
 
             //Display image
-            Texture text = new Texture(new Image(leftBuffer));
+            Texture text = new Texture(new Image(rightBuffer));
             Drawable right = new Sprite(text);
             Drawable left = new Sprite(new Texture(new Image(leftBuffer)));
             RenderStates state = new RenderStates(text);
