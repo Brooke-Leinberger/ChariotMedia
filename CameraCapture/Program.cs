@@ -70,8 +70,17 @@ namespace CameraCapture
                 ExposureType = ExposureType.Auto
             };
             
+            //Settings for capture
+            VideoConnectionSettings rightSettings = new VideoConnectionSettings(4)
+            {
+                CaptureSize = (640, 480),
+                PixelFormat = PixelFormat.MJPEG,
+                ExposureType = ExposureType.Auto
+            };
+            
             //Initialize capture device
             using VideoDevice leftEye = VideoDevice.Create(leftSettings);
+            using VideoDevice rightEye = VideoDevice.Create(rightSettings);
             int port = 7777;
             
             Console.WriteLine("Starting Server...");
@@ -86,39 +95,48 @@ namespace CameraCapture
             Console.WriteLine($"Client Connected\nStarting Stream...");
 
             
-            fixed (V4l2FrameBuffer* buffers = &(((UnixVideoDevice)leftEye).ApplyFrameBuffers()[0]))
+            fixed (V4l2FrameBuffer* 
+                   leftBuff = &(((UnixVideoDevice)leftEye).ApplyFrameBuffers()[0]),
+                   rightBuff = &(((UnixVideoDevice)rightEye).ApplyFrameBuffers()[0])
+                   )
             {
-                // Start data stream
+                    // Start data stream
                 v4l2_buf_type type = v4l2_buf_type.V4L2_BUF_TYPE_VIDEO_CAPTURE;
-                var status = Interop.ioctl(((UnixVideoDevice) leftEye).getFD(), (int) RawVideoSettings.VIDIOC_STREAMON,
+                var leftStatus = Interop.ioctl(((UnixVideoDevice) leftEye).getFD(), (int) RawVideoSettings.VIDIOC_STREAMON,
+                    new IntPtr(&type));
+                
+                var rightStatus = Interop.ioctl(((UnixVideoDevice) rightEye).getFD(), (int) RawVideoSettings.VIDIOC_STREAMON,
                     new IntPtr(&type));
                 
                 //Send loop
                 while(true)
                 {
-                    byte[] dataBuffer = ((UnixVideoDevice) leftEye).GetFrameData(buffers); //create byte buffer with full frame stored
+                    byte[] leftBuffer = ((UnixVideoDevice) leftEye).GetFrameData(leftBuff); //create byte buffer with full frame stored
+                    byte[] rightBuffer = ((UnixVideoDevice) rightEye).GetFrameData(rightBuff); //create byte buffer with full frame stored
                     
-                    int leftLength = new JpegParser(dataBuffer).find_length(); //find length of databuffer
-                    int rightLength = new JpegParser(dataBuffer).find_length(); //find length of databuffer
+                    int leftLength = new JpegParser(leftBuffer).find_length(); //find length of databuffer
+                    int rightLength = new JpegParser(rightBuffer).find_length(); //find length of databuffer
                     client.Send(IntToBytes(leftLength, 3), 3, SocketFlags.None); //send length ahead of frame
                     client.Send(IntToBytes(rightLength, 3), 3, SocketFlags.None); //send length ahead of frame
                     
                     //send frame
                     for (int count = 0; count < leftLength;)
-                        count += client.Send(dataBuffer, count, Clamp(leftLength-count, 1024, 0), SocketFlags.None);
+                        count += client.Send(leftBuffer, count, Clamp(leftLength-count, 1024, 0), SocketFlags.None);
                     
                     
                     //send frame
                     for (int count = 0; count < rightLength;)
-                        count += client.Send(dataBuffer, count, Clamp(rightLength-count, 1024, 0), SocketFlags.None);
+                        count += client.Send(rightBuffer, count, Clamp(rightLength-count, 1024, 0), SocketFlags.None);
                 }
 
                 // Close data stream
                 Console.WriteLine("Closing Server...");
-                status = Interop.ioctl(((UnixVideoDevice) leftEye).getFD(), (int) RawVideoSettings.VIDIOC_STREAMOFF,
+                leftStatus = Interop.ioctl(((UnixVideoDevice) leftEye).getFD(), (int) RawVideoSettings.VIDIOC_STREAMOFF,
                     new IntPtr(&type));
 
-                UnixVideoDevice.UnmappingFrameBuffers(buffers);
+                rightStatus = Interop.ioctl(((UnixVideoDevice) leftEye).getFD(), (int) RawVideoSettings.VIDIOC_STREAMOFF,
+                    new IntPtr(&type));
+                UnixVideoDevice.UnmappingFrameBuffers(leftBuff);
                 client.Close();
                 listener.Close();
                 Console.WriteLine("Server Closed");
