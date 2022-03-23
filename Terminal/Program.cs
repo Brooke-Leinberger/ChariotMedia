@@ -27,25 +27,34 @@ class Program
         connection.Connect(IPAddress.Parse("127.0.0.1"), 7777);
         
         //setup display
-        RenderWindow window = new RenderWindow(new VideoMode(1920, 1080), "Pi Stream");
+        RenderWindow window = new RenderWindow(new VideoMode(1280, 480), "Pi Stream");
 
         byte[] handshake = new byte[3]; //for storing length of frame
         while(true)
         {
             connection.Receive(handshake, 0, 3, SocketFlags.None); //Recieve length of frame
-            byte[] dataBuffer = new byte[256 * 256 * handshake[2] + 256 * handshake[1] + handshake[0]]; //create buffer to correct size
+            byte[] leftBuffer = new byte[256 * 256 * handshake[2] + 256 * handshake[1] + handshake[0]]; //create buffer to correct size
+            
+            connection.Receive(handshake, 0, 3, SocketFlags.None); //Recieve length of frame
+            byte[] rightBuffer = new byte[256 * 256 * handshake[2] + 256 * handshake[1] + handshake[0]]; //create buffer to correct size
+            
             
             //Recieve loop
-            for (int count = 0, gros = 0; count < dataBuffer.Length; count += gros)
+            for (int count = 0, gros = 0; count < leftBuffer.Length; count += gros)
             {
-                gros = connection.Receive(dataBuffer, count, dataBuffer.Length - count, SocketFlags.None);
+                gros = connection.Receive(leftBuffer, count, leftBuffer.Length - count, SocketFlags.None);
                 Console.WriteLine(count);
             }
 
             //Display image
-            Drawable sprite = new Sprite(new Texture(new Image(dataBuffer)));
+            Texture text = new Texture(new Image(leftBuffer));
+            Drawable right = new Sprite(text);
+            Drawable left = new Sprite(new Texture(new Image(leftBuffer)));
+            RenderStates state = new RenderStates(text);
+            state.Transform.Translate(640,0);
             window.Clear();
-            window.Draw(sprite);
+            window.Draw(left);
+            window.Draw(right, state);
             window.Display();
         }
     }

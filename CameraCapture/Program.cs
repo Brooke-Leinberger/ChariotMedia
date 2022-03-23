@@ -100,6 +100,7 @@ namespace CameraCapture
                     
                     int length = new JpegParser(dataBuffer).find_length(); //find length of databuffer
                     client.Send(IntToBytes(length, 3), 3, SocketFlags.None); //send length ahead of frame
+                    client.Send(IntToBytes(length, 3), 3, SocketFlags.None); //send length ahead of frame
                     
                     //send frame
                     for (int count = 0; count < length;)
