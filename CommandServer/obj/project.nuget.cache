@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HElvz/0utySmS8VW6CgvyCGVlhrycnigcB6LLRgUQuwtDpaSD1UBybNLRytZSKDafxV7sFhzGLL/OJQIroBsmQ==",
+  "dgSpecHash": "xOJWWSTHJCeFmqpcEwZ7i4gQiVwYsIT5sxGrxaQobmTJJt6dJT/4jiwkf+O6MfSgncqJdVL2z7v0WkiJZSU1qQ==",
   "success": true,
-  "projectFilePath": "/home/juno/RiderProjects/WebApplication1/CommandServer/CommandServer.csproj",
+  "projectFilePath": "/home/juno/RiderProjects/Chariot/CommandServer/CommandServer.csproj",
   "expectedPackageFiles": [
     "/home/juno/.nuget/packages/cswebcam/1.0.3/cswebcam.1.0.3.nupkg.sha512",
     "/home/juno/.nuget/packages/microsoft.aspnetcore.diagnostics.entityframeworkcore/6.0.3/microsoft.aspnetcore.diagnostics.entityframeworkcore.6.0.3.nupkg.sha512",

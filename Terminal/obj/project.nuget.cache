@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "+oKF7aTqgKhfj1Z6nk+kV33z+NHfjmS2QprssdgxGcR5ji+jneFHDXxl7+blsE+dBJYMHxhR2O6j0ajE9QvhOQ==",
+  "dgSpecHash": "6l5YMUivAsZQPE44aEAoBg0DfNvCXmYW2TPRYXKF1/IczxHR/7y2+UFSoQ1Zf+kbGAQOrw9TwkhGL5U6QIqz4Q==",
   "success": true,
-  "projectFilePath": "/home/juno/RiderProjects/WebApplication1/Terminal/Terminal.csproj",
+  "projectFilePath": "/home/juno/RiderProjects/Chariot/Terminal/Terminal.csproj",
   "expectedPackageFiles": [
     "/home/juno/.nuget/packages/csfml/2.5.0/csfml.2.5.0.nupkg.sha512",
     "/home/juno/.nuget/packages/microsoft.win32.systemevents/6.0.2-mauipre.1.22102.15/microsoft.win32.systemevents.6.0.2-mauipre.1.22102.15.nupkg.sha512",

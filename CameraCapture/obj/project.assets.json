@@ -214,11 +214,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/juno/RiderProjects/WebApplication1/CameraCapture/CameraCapture.csproj",
+      "projectUniqueName": "/home/juno/RiderProjects/Chariot/CameraCapture/CameraCapture.csproj",
       "projectName": "CameraCapture",
-      "projectPath": "/home/juno/RiderProjects/WebApplication1/CameraCapture/CameraCapture.csproj",
+      "projectPath": "/home/juno/RiderProjects/Chariot/CameraCapture/CameraCapture.csproj",
       "packagesPath": "/home/juno/.nuget/packages/",
-      "outputPath": "/home/juno/RiderProjects/WebApplication1/CameraCapture/obj/",
+      "outputPath": "/home/juno/RiderProjects/Chariot/CameraCapture/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/juno/.nuget/NuGet/NuGet.Config"

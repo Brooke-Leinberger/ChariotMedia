@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "XKHTdI39l3w+d3gUO/g5tVl3eudvgyO/Uq7OVZwVoqs8MOC9yeI/S9HfEI1uLsOwNVvZO2Hdima1cHRY2eoR4g==",
+  "dgSpecHash": "lISwiceIQYrSwiKgjY5cr9sFPSRle4jtLaGZc7hP0i6ljMFSvx52uQTU6qPp1BcZH2fm+VHfCt3weqn1uuBGXg==",
   "success": true,
-  "projectFilePath": "/home/juno/RiderProjects/WebApplication1/CameraCapture/CameraCapture.csproj",
+  "projectFilePath": "/home/juno/RiderProjects/Chariot/CameraCapture/CameraCapture.csproj",
   "expectedPackageFiles": [
     "/home/juno/.nuget/packages/microsoft.win32.systemevents/6.0.2-mauipre.1.22102.15/microsoft.win32.systemevents.6.0.2-mauipre.1.22102.15.nupkg.sha512",
     "/home/juno/.nuget/packages/ssh.net/2020.0.1/ssh.net.2020.0.1.nupkg.sha512",

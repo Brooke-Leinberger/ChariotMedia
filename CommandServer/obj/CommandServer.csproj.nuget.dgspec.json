@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/juno/RiderProjects/WebApplication1/CommandServer/CommandServer.csproj": {}
+    "/home/juno/RiderProjects/Chariot/CommandServer/CommandServer.csproj": {}
   },
   "projects": {
-    "/home/juno/RiderProjects/WebApplication1/CommandServer/CommandServer.csproj": {
+    "/home/juno/RiderProjects/Chariot/CommandServer/CommandServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/juno/RiderProjects/WebApplication1/CommandServer/CommandServer.csproj",
+        "projectUniqueName": "/home/juno/RiderProjects/Chariot/CommandServer/CommandServer.csproj",
         "projectName": "CommandServer",
-        "projectPath": "/home/juno/RiderProjects/WebApplication1/CommandServer/CommandServer.csproj",
+        "projectPath": "/home/juno/RiderProjects/Chariot/CommandServer/CommandServer.csproj",
         "packagesPath": "/home/juno/.nuget/packages/",
-        "outputPath": "/home/juno/RiderProjects/WebApplication1/CommandServer/obj/",
+        "outputPath": "/home/juno/RiderProjects/Chariot/CommandServer/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/juno/.nuget/NuGet/NuGet.Config"

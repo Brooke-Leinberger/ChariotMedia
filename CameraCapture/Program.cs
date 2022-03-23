@@ -63,14 +63,15 @@ namespace CameraCapture
             CompareType<v4l2_buffer>();
             
             //Settings for capture
-            VideoConnectionSettings settings = new VideoConnectionSettings(0)
+            VideoConnectionSettings leftSettings = new VideoConnectionSettings(2)
             {
-                CaptureSize = (1920, 1080),
+                CaptureSize = (640, 480),
                 PixelFormat = PixelFormat.MJPEG,
                 ExposureType = ExposureType.Auto
             };
+            
             //Initialize capture device
-            using VideoDevice device = VideoDevice.Create(settings);
+            using VideoDevice leftEye = VideoDevice.Create(leftSettings);
             int port = 7777;
             
             Console.WriteLine("Starting Server...");
@@ -85,17 +86,17 @@ namespace CameraCapture
             Console.WriteLine($"Client Connected\nStarting Stream...");
 
             
-            fixed (V4l2FrameBuffer* buffers = &(((UnixVideoDevice)device).ApplyFrameBuffers()[0]))
+            fixed (V4l2FrameBuffer* buffers = &(((UnixVideoDevice)leftEye).ApplyFrameBuffers()[0]))
             {
                 // Start data stream
                 v4l2_buf_type type = v4l2_buf_type.V4L2_BUF_TYPE_VIDEO_CAPTURE;
-                var status = Interop.ioctl(((UnixVideoDevice) device).getFD(), (int) RawVideoSettings.VIDIOC_STREAMON,
+                var status = Interop.ioctl(((UnixVideoDevice) leftEye).getFD(), (int) RawVideoSettings.VIDIOC_STREAMON,
                     new IntPtr(&type));
                 
                 //Send loop
                 while(true)
                 {
-                    byte[] dataBuffer = ((UnixVideoDevice) device).GetFrameData(buffers); //create byte buffer with full frame stored
+                    byte[] dataBuffer = ((UnixVideoDevice) leftEye).GetFrameData(buffers); //create byte buffer with full frame stored
                     
                     int length = new JpegParser(dataBuffer).find_length(); //find length of databuffer
                     client.Send(IntToBytes(length, 3), 3, SocketFlags.None); //send length ahead of frame
@@ -107,7 +108,7 @@ namespace CameraCapture
 
                 // Close data stream
                 Console.WriteLine("Closing Server...");
-                status = Interop.ioctl(((UnixVideoDevice) device).getFD(), (int) RawVideoSettings.VIDIOC_STREAMOFF,
+                status = Interop.ioctl(((UnixVideoDevice) leftEye).getFD(), (int) RawVideoSettings.VIDIOC_STREAMOFF,
                     new IntPtr(&type));
 
                 UnixVideoDevice.UnmappingFrameBuffers(buffers);

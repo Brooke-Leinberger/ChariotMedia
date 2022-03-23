@@ -7,4 +7,4 @@ build_property.InvariantGlobalization =
 build_property.PlatformNeutralAssembly = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = CameraCapture
-build_property.ProjectDir = /home/juno/RiderProjects/WebApplication1/CameraCapture/
+build_property.ProjectDir = /home/juno/RiderProjects/Chariot/CameraCapture/

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/juno/RiderProjects/WebApplication1/Terminal/Terminal.csproj": {}
+    "/home/juno/RiderProjects/Chariot/Terminal/Terminal.csproj": {}
   },
   "projects": {
-    "/home/juno/RiderProjects/WebApplication1/Terminal/Terminal.csproj": {
+    "/home/juno/RiderProjects/Chariot/Terminal/Terminal.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/juno/RiderProjects/WebApplication1/Terminal/Terminal.csproj",
+        "projectUniqueName": "/home/juno/RiderProjects/Chariot/Terminal/Terminal.csproj",
         "projectName": "Terminal",
-        "projectPath": "/home/juno/RiderProjects/WebApplication1/Terminal/Terminal.csproj",
+        "projectPath": "/home/juno/RiderProjects/Chariot/Terminal/Terminal.csproj",
         "packagesPath": "/home/juno/.nuget/packages/",
-        "outputPath": "/home/juno/RiderProjects/WebApplication1/Terminal/obj/",
+        "outputPath": "/home/juno/RiderProjects/Chariot/Terminal/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/juno/.nuget/NuGet/NuGet.Config"

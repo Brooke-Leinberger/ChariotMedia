@@ -23,8 +23,8 @@ class Program
     {
         //Setup connection
         Socket connection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        connection.Connect(IPAddress.Parse("192.168.1.10"), 7777);
-        //Server.Connect(IPAddress.Parse("127.0.0.1"), 7777);
+        //connection.Connect(IPAddress.Parse("192.168.133.105"), 7777);
+        connection.Connect(IPAddress.Parse("127.0.0.1"), 7777);
         
         //setup display
         RenderWindow window = new RenderWindow(new VideoMode(1920, 1080), "Pi Stream");

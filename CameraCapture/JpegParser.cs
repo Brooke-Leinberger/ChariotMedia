@@ -1,4 +1,6 @@
 using System.Text.RegularExpressions;
+using System.IO;
+using System;
 namespace CameraCapture;
 
 
@@ -36,6 +38,14 @@ public class JpegParser
         }
     }
 
+    private void saveFile(byte[] buffer)
+    {
+        FileStream fs = File.Open("/home/juno/dump.jpg", FileMode.OpenOrCreate);
+        fs.Write(buffer, 0, buffer.Length);
+        fs.Flush();
+        fs.Close();
+    }
+
     public int[] get_resolution()
     {
         return new int[] {256 * image[9] + image[10], 256 * image[7] + image[8]};
@@ -46,20 +56,32 @@ public class JpegParser
         //parse through header, until Start of Scan
         int index = 0;
         parse_marker(index);
-        if (Convert.ToHexString(marker) != "FFD80000")
-            return -1; //Not a valid jpeg
+        if (marker[0] != 255 || marker[1] != 216)
+            throw new Exception("JPEG Parsing Error: Not a JPEG");
 
         index += 2;
 
-
+        int lastIndex;
         while (true)
         {
             string hex_debug = Convert.ToString(index, 16);
             parse_marker(index);
             if (marker[0] != 255)
-                return -2; //should be a marker
-            if (marker[1] == 218)
+            {
+                saveFile(image);
+                throw new Exception("JPEG Parsing Error: Expected Control Marker");
+            }
+
+            if (marker[1] == 255)
+            {
+                index++; //fix bizarre off by one error right before Start of Scan
+                continue;
+            }
+
+            else if (marker[1] == 218)
                 return index;
+            
+            lastIndex = index;
             index += 256 * marker[2] + marker[3] + 2; //offset by length signifier + 2
         }
     }
