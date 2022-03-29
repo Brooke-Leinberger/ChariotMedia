@@ -63,7 +63,7 @@ namespace CameraCapture
             CompareType<v4l2_buffer>();
             
             //Settings for capture
-            VideoConnectionSettings leftSettings = new VideoConnectionSettings(2)
+            VideoConnectionSettings leftSettings = new VideoConnectionSettings(0)
             {
                 CaptureSize = (640, 480),
                 PixelFormat = PixelFormat.MJPEG,
@@ -71,7 +71,7 @@ namespace CameraCapture
             };
             
             //Settings for capture
-            VideoConnectionSettings rightSettings = new VideoConnectionSettings(4)
+            VideoConnectionSettings rightSettings = new VideoConnectionSettings(2)
             {
                 CaptureSize = (640, 480),
                 PixelFormat = PixelFormat.MJPEG,

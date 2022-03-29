@@ -19,12 +19,13 @@ class Program
         return value;
     }
 
-    static void Main()
+    static void Main(string[] args)
     {
         //Setup connection
         Socket connection = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         //connection.Connect(IPAddress.Parse("192.168.133.105"), 7777);
-        connection.Connect(IPAddress.Parse("127.0.0.1"), 7777);
+        //connection.Connect(IPAddress.Parse("127.0.0.1"), 7777);
+        connection.Connect(IPAddress.Parse(args[0]), 7777);
         
         //setup display
         RenderWindow window = new RenderWindow(new VideoMode(1280, 480), "Pi Stream");
@@ -38,7 +39,7 @@ class Program
             connection.Receive(handshake, 0, 3, SocketFlags.None); //Recieve length of frame
             byte[] rightBuffer = new byte[256 * 256 * handshake[2] + 256 * handshake[1] + handshake[0]]; //create buffer to correct size
             
-            
+
             //Recieve loop
             for (int count = 0, gros = 0; count < leftBuffer.Length; count += gros)
                 gros = connection.Receive(leftBuffer, count, leftBuffer.Length - count, SocketFlags.None);
