@@ -45,10 +45,6 @@
             "System.Drawing.Common": {
               "target": "Package",
               "version": "[6.0.2-mauipre.1.22102.15, )"
-            },
-            "Unosquare.PiGpio": {
-              "target": "Package",
-              "version": "[0.3.1, )"
             }
           },
           "imports": [
