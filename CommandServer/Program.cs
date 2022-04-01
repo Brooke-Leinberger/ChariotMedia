@@ -1,53 +1,18 @@
-﻿// See https://aka.ms/new-console-template for more information
+using System;
+namespace CommandServer;
 
-using Unosquare.PiGpio.NativeEnums;
-using Unosquare.PiGpio.NativeMethods;
-
-
-class Program
+public class Program
 {
-    /*
-     * Reserved commands:
-     * 255: Start
-     * 254: Kill
-     */
-    static void SendCommandSequence(UIntPtr handle, double[] values)
+    static int Main()
     {
-        //setup buffer and header
-        byte[] buffer = new byte[values.Length + 3];
-        buffer[0] = 255;
-        buffer[1] = (byte) buffer.Length;
-        buffer[2] = 1;
+        Controller xbox = new Controller(0);
         
-        //copy values into write buffer
-        for (int i = 0; i < values.Length; i++)
-            buffer[i + 3] = (byte)values[i];
-        
-        //write buffer
-        Spi.SpiWrite(handle, buffer);
-    }
-
-    static void SendKillSequence(UIntPtr handle) => Spi.SpiWrite(handle, new byte[] {254});
-
-        static int Main()
-    {
-        Console.WriteLine("Hello, World!");
-        UIntPtr comm = Spi.SpiOpen(SpiChannelId.SpiChannel0, 2000000, SpiFlags.Default);
-
-        while (true)
+        for (;;)
         {
-            string input = Console.ReadLine();
-            if (input == null)
-                return -1; //ensure input is not null
-
-            if (input.ToLower() == "exit")
-                break;
-
-            double[] args = input.Split(',').Select(c => Double.Parse(c)).ToArray();
-            SendCommandSequence(comm, args);
+            xbox.Update();
+            Console.WriteLine($"Right: {xbox.getRightStick()[0]}, {xbox.getRightStick()[1]}; Left: {xbox.getLeftStick()[0]}, {xbox.getLeftStick()[1]}");
         }
-
-        Spi.SpiClose(comm);
+        
         return 0;
     }
 }
