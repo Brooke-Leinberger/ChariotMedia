@@ -13,10 +13,13 @@ using Unosquare.PiGpio.NativeMethods;
 
 class Program
 { 
-    static int Main()
+    static int Main(string[] args)
     {
-        //Console.WriteLine(Setup.GpioInitialise());
-        SerialPort arduino = new SerialPort("/dev/ttyACM0", 9600, Parity.Odd, 8, StopBits.One);
+        string uart = "/dev/ttyACM0";
+        if (args.Length > 0)
+            uart = args[0];
+            
+        SerialPort arduino = new SerialPort(uart, 9600, Parity.Odd, 8, StopBits.One);
         arduino.Open();
 
         int port = 8080;

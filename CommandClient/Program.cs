@@ -24,14 +24,26 @@ public class Program
         
         //connection.Send(capcom.DriveCommandSequence(CommandProtocol.SystemFunction.Initialize));
         //connection.Send(capcom.VisorCommandSequence(CommandProtocol.SystemFunction.Initialize));
-
+        int val = 0, inc = 1;
         while (true)
         {
             //Console.WriteLine(CommandProtocol.ByteToHex(capcom.VisorCommandSequence(CommandProtocol.SystemFunction.Update)));
             //connection.Send(capcom.DriveCommandSequence(CommandProtocol.SystemFunction.Update));
             
             //connection.Send(capcom.VisorCommandSequence(CommandProtocol.SystemFunction.Update));
-            connection.Send(new byte[] {255, 1, 2, 2, 5, 15, 7, 8});
+
+            if (val + inc is > 45 or < -45)
+                inc *= -1;
+
+            val += inc;
+            
+            Console.WriteLine($"Val: {val}, Inc: {inc}");
+
+            connection.Send(CommandProtocol.GenerateCommandSequence(
+                CommandProtocol.Subsystem.Payload1, 
+                CommandProtocol.SystemFunction.Update,
+                new byte[] {(byte)(90 + val), (byte)(90 - val)}
+                ));
         }
         
         //connection.Send(capcom.DriveCommandSequence(CommandProtocol.SystemFunction.Kill));
