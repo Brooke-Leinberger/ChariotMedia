@@ -4,7 +4,7 @@ using Unosquare.PiGpio.NativeEnums;
 using Unosquare.PiGpio.NativeMethods;
 
 
-class CommandProtocol
+public class CommandProtocol
 {
     /*
      * NOTE: RESERVED: 255 (START COMMAND)
@@ -34,7 +34,7 @@ class CommandProtocol
             return '\0';
 
         int inc = 48;
-        if (val > 10)
+        if (val > 9)
             inc = 55;
 
         return (char) (val + inc);
@@ -49,7 +49,7 @@ class CommandProtocol
         return new string(new char[] {DecimalToHex(left), DecimalToHex(right)});
     }
 
-    private static string ByteToHex(byte[] arr)
+    public static string ByteToHex(byte[] arr)
     {
         string result = "";
         foreach (byte val in arr)
@@ -58,18 +58,18 @@ class CommandProtocol
         return result;
     }
 
-    static byte[] GenerateCommandSequence(UIntPtr handle, Subsystem sys, SystemFunction func, double[] values)
+    public static byte[] GenerateCommandSequence(Subsystem sys, SystemFunction func, byte[] values)
     {
         //setup buffer and header
         byte[] buffer = new byte[values.Length + 4];
         buffer[0] = 255;
         buffer[1] = (byte) sys;
         buffer[2] = (byte) func;
-        buffer[3] = (byte) buffer.Length;
+        buffer[3] = (byte) values.Length;
         
         //copy values into write buffer
         for (int i = 0; i < values.Length; i++)
-            buffer[i + 4] = (byte)values[i];
+            buffer[i + 4] = values[i];
 
         return buffer;
     }

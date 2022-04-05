@@ -5,18 +5,11 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>CommandClient</RootNamespace>
+        <RootNamespace>CommandServer</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.IO.Ports" Version="6.0.2-mauipre.1.22102.15" />
       <PackageReference Include="Unosquare.PiGpio" Version="0.3.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Include="..\CommandClient\CommandProtocol.cs">
-        <Link>CommandProtocol.cs</Link>
-      </Compile>
     </ItemGroup>
 
 </Project>

@@ -41,14 +41,13 @@ public class Controller
     public Controller(int index)
     {
         SDL2Index = index;
+        InitController();
         pad = GetControllerPointer(SDL2Index);
         Update();
     }
 
     public void Update()
     {
-        InitController();
-        pad = GetControllerPointer(0);
         IntPtr arr = GetControllerAxes(pad);
 
         /*
