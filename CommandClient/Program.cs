@@ -19,7 +19,7 @@ public class Program
             connection.Connect(IPAddress.Parse(args[0]), 8080);
         
         else
-            connection.Connect(IPAddress.Parse("192.168.37.147"), 8080);
+            connection.Connect(IPAddress.Parse("192.168.37.190"), 8080);
             
         
         //connection.Send(capcom.DriveCommandSequence(CommandProtocol.SystemFunction.Initialize));
@@ -31,7 +31,7 @@ public class Program
             //connection.Send(capcom.DriveCommandSequence(CommandProtocol.SystemFunction.Update));
             
             //connection.Send(capcom.VisorCommandSequence(CommandProtocol.SystemFunction.Update));
-            connection.Send(new byte[] {255, 2, 2, 2, 90, 90});
+            connection.Send(new byte[] {255, 1, 2, 2, 5, 15, 7, 8});
         }
         
         //connection.Send(capcom.DriveCommandSequence(CommandProtocol.SystemFunction.Kill));

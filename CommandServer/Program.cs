@@ -15,8 +15,9 @@ class Program
 { 
     static int Main()
     {
-        Console.WriteLine(Setup.GpioInitialise());
-        UIntPtr arduino = Uart.SerOpen("/dev/ttyACM0", UartRate.BaudRate19200);
+        //Console.WriteLine(Setup.GpioInitialise());
+        SerialPort arduino = new SerialPort("/dev/ttyACM0", 9600, Parity.Odd, 8, StopBits.One);
+        arduino.Open();
 
         int port = 8080;
         Console.WriteLine("Starting Server...");
@@ -29,7 +30,6 @@ class Program
         Console.WriteLine("Server Started; Awaiting Clients...");
         Socket client = listener.Accept();
         Console.WriteLine($"Client Connected\nStarting Commands...");
-        IO.GpioSetMode(SystemGpio.Bcm06, PinMode.Output);
 
         byte[] command = new byte[8];
         while (true)
@@ -40,12 +40,12 @@ class Program
             
             //recieve header
             int result = 1;
-            while (result != 4)
-                result += client.Receive(command, 1, 4 - result, SocketFlags.None);
+            while (result != CommandProtocol.HEADER_SIZE)
+                result += client.Receive(command, 1, CommandProtocol.HEADER_SIZE - result, SocketFlags.None);
 
             result = 0;
             while (result < command[3])
-                result += client.Receive(command, 4, command[3] - result, SocketFlags.None);
+                result += client.Receive(command, CommandProtocol.HEADER_SIZE, command[3] - result, SocketFlags.None);
 
             if (command[1] == (byte) CommandProtocol.Subsystem.Core &&
                 command[2] == (byte) CommandProtocol.SystemFunction.Kill)
@@ -57,22 +57,25 @@ class Program
                 break;
             }
             
+            //check parity
             Console.WriteLine(CommandProtocol.ByteToHex(command));
-            
+            if(command[4] != command[1] + command[2] + command[3])
+                continue;
+
+            int parity = 0;
+            for (int i = 0; i < command[3]; i++)
+                parity += (int) command[i + CommandProtocol.HEADER_SIZE];
+
+            if (command[5] != parity % 255)
+                continue;
+
+            Console.WriteLine("WRITE");
             //send command to arduino
-            Uart.SerWrite(arduino, command, (uint)(command[3] + 4));
+            arduino.Write(command, 0, command[3] + CommandProtocol.HEADER_SIZE);
 
-            /*
-            result = 0;
-            byte[] echo = new byte[20];
-            int echoLen = command[3] + 4 + "ECHO: \n".Length;
-
-            while (result < echoLen)
-                result += Uart.SerRead(arduino, echo, (uint) echoLen);
-                */
         }
         
-        Setup.GpioTerminate();
+        arduino.Close();
         return 0;
     }
 }

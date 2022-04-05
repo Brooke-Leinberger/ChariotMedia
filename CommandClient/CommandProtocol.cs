@@ -28,6 +28,8 @@ public class CommandProtocol
         Update = 2
     }
 
+    public const int HEADER_SIZE = 6;
+
     private static char DecimalToHex(int val)
     {
         if (val > 15 || val < 0)
@@ -61,15 +63,23 @@ public class CommandProtocol
     public static byte[] GenerateCommandSequence(Subsystem sys, SystemFunction func, byte[] values)
     {
         //setup buffer and header
-        byte[] buffer = new byte[values.Length + 4];
+        byte[] buffer = new byte[values.Length + 6];
         buffer[0] = 255;
         buffer[1] = (byte) sys;
         buffer[2] = (byte) func;
         buffer[3] = (byte) values.Length;
+        buffer[4] = (byte) ((int)sys + (int)func + values.Length);
+        
         
         //copy values into write buffer
+        int parity = 0;
         for (int i = 0; i < values.Length; i++)
-            buffer[i + 4] = values[i];
+        {
+            buffer[i + HEADER_SIZE] = values[i];
+            parity += values[i];
+        }
+
+        buffer[5] = (byte)(parity % 255);
 
         return buffer;
     }
