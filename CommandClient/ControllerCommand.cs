@@ -33,7 +33,6 @@ public class ControllerCommand
         byte[] data = pad.getRightStick().Select(c => 
             (byte)MapRange(c, Int16.MinValue, Int16.MaxValue, 0, 180)).ToArray();
         byte[] buff = CommandProtocol.GenerateCommandSequence(CommandProtocol.Subsystem.Payload1, func, data);
-        Console.WriteLine(CommandProtocol.ByteToHex(buff));
         return buff;
     }
     

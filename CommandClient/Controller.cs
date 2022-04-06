@@ -5,15 +5,6 @@ namespace CommandServer;
 
 public class Controller
 {
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct Xbox
-    {
-        public int count;
-        public IntPtr arr;
-    }
-    
-    
     [DllImport("libcontroller.so", CallingConvention = CallingConvention.StdCall, EntryPoint = "_Z17GetControllerAxesPvP4xbox")]
     private static extern IntPtr GetControllerAxes(IntPtr pad);
     

@@ -34,9 +34,12 @@ class Program
         Socket client = listener.Accept();
         Console.WriteLine($"Client Connected\nStarting Commands...");
 
-        byte[] command = new byte[8];
+        byte[] command = new byte[8], dustbin = new byte[260];
+        int count = 0;
         while (true)
         {
+            client.Send(new byte[]{255, 0, 0, 255});   
+            count++;
             command[0] = 0;
             while (command[0] != 255)
                 client.Receive(command, 1, SocketFlags.None);
@@ -60,8 +63,8 @@ class Program
                 break;
             }
             
-            //check parity
-            Console.WriteLine(CommandProtocol.ByteToHex(command));
+            Console.WriteLine($"{count.ToString(), 6}: {CommandProtocol.ByteToHex(command)}");
+            /*//check parity
             if(command[4] != command[1] + command[2] + command[3])
                 continue;
 
@@ -71,8 +74,8 @@ class Program
 
             if (command[5] != parity % 255)
                 continue;
+                */
 
-            Console.WriteLine("WRITE");
             //send command to arduino
             arduino.Write(command, 0, command[3] + CommandProtocol.HEADER_SIZE);
 
